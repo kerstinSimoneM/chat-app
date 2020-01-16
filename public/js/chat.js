@@ -2,34 +2,22 @@
 // stored in a constant named socket to have access to it
 const socket = io();
 
-// //-------------------------------------------------------------------------------------
-// // send and reveive events
-
-// // receive an event that the server is sending
-// // on accept the name of the event and a function to run when the event occurs
-// socket.on("countUpdated", (counter) => {
-//     console.log("The count has been updated:", counter);
-// })
-
-// document.querySelector("#increment").addEventListener("click", () => {
-//     console.log("Clicked!");
-//     socket.emit("increment");
-// })
-// //-------------------------------------------------------------------------------------
-
 socket.on("message", (message) => {
     console.log(message);
 })
 
-document.querySelector("#message-form").addEventListener("submit", (event) => {
+$messageForm.addEventListener("submit", (event) => {
     event.preventDefault()
     // const message = document.getElementById('message').value;
     const message = event.target.elements.message.value;
-    socket.emit("sendMessage", message, (message) => {
-        console.log("Client says: Message was sent.", message)
+    socket.emit("sendMessage", message, (error) => {
+        if (error) {
+            return console.log(error)
+        }
+        console.log("Client says: Message was sent.")
     });
 })
- 
+
 document.getElementById("location").addEventListener("click", (event) => {
     if (!navigator.geolocation) {
         return alert('Geolocation is not supported by your browser');
@@ -39,7 +27,7 @@ document.getElementById("location").addEventListener("click", (event) => {
         socket.emit("sendLocation", {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
-        })
+        }, () => console.log("Location shared!"))
     })
 
 })

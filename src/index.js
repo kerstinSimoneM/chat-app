@@ -5,6 +5,7 @@ const http = require("http");
 const express = require("express");
 // load in socket.io
 const socketio = require("socket.io");
+const Filter = require('bad-words');
 
 const app = express();
 // socket.io have to be called by the ray http server
@@ -19,7 +20,6 @@ const publicDirectoryPath = path.join(__dirname, "../public")
 // give access to the html file in the public folder
 app.use(express.static(publicDirectoryPath))
 
-// let count = 0;
 // print a message when a client connects (event is called connection)
 // connection is an build-in event
 io.on("connection", (socket) => {
@@ -31,13 +31,20 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("message", "A new user has joined");
 
     socket.on("sendMessage", (message, callback) => {
+        const filter = new Filter();
+
+        if (filter.isProfane(message)) {
+            return callback("Profanity is not allowed!")
+        }
+         
         io.emit("message", message);
-        callback("Server says: Delivered!");
+        callback();
     })
 
-    socket.on("sendLocation", (location) => {
-        const {latitude, longitude} = location
+    socket.on("sendLocation", (location, callback) => {
+        const { latitude, longitude } = location;
         io.emit("message", `https://www.google.com/maps?q=${latitude},${longitude}`);
+        callback();
 
     })
 
@@ -46,20 +53,6 @@ io.on("connection", (socket) => {
         io.emit("message", "User has left.")
     });
 
-    // //-----------------------------------------------------------------------------------
-    // // send an event from the server to the client with a custom event "countUpdated"
-    // // it will be emitted to just a single connection
-    // socket.emit("countUpdated", count);
-
-    // socket.on("increment", () => {
-    //     count++
-    //     // it will be emitted to just a single connection
-    //     // socket.emit("countUpdated", count);
-    //     // new tab on localhost:3000 = new User
-    //     // here we want to emit the message to all the users connected
-    //     io.emit("countUpdated", count);
-    // })
-    // //-----------------------------------------------------------------------------------
 })
 
 
