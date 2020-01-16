@@ -28,9 +28,23 @@ io.on("connection", (socket) => {
 
     socket.emit("message", "Welcome, cutie!");
 
-    socket.on("sendMessage", (message) => {
+    socket.broadcast.emit("message", "A new user has joined");
+
+    socket.on("sendMessage", (message, callback) => {
         io.emit("message", message);
+        callback("Server says: Delivered!");
     })
+
+    socket.on("sendLocation", (location) => {
+        const {latitude, longitude} = location
+        io.emit("message", `https://www.google.com/maps?q=${latitude},${longitude}`);
+
+    })
+
+    // disconnect is an build-in event
+    socket.on("disconnect", () => {
+        io.emit("message", "User has left.")
+    });
 
     // //-----------------------------------------------------------------------------------
     // // send an event from the server to the client with a custom event "countUpdated"
