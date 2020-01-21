@@ -1,5 +1,3 @@
-// client side!
-
 // Function to connect to the server
 // stored in a constant named socket to have access to it
 const socket = io();

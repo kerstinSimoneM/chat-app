@@ -2,17 +2,20 @@
   "name": "chat-app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "client-install": "cd client && npm i",
+    "start": "node src/server.js",
+    "server": "nodemon src/server.js",
+    "client": "cd client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bad-words": "^3.0.3",
+    "concurrently": "^5.0.2",
     "express": "^4.17.1",
     "socket.io": "^2.3.0"
   },

@@ -14,7 +14,7 @@ const server = http.createServer(app);
 // create an instance to use socket.io
 const io = socketio(server);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const publicDirectoryPath = path.join(__dirname, "../public")
 
 // give access to the html file in the public folder
@@ -36,7 +36,7 @@ io.on("connection", (socket) => {
         if (filter.isProfane(message)) {
             return callback("Profanity is not allowed!")
         }
-         
+
         io.emit("message", message);
         callback();
     })
@@ -58,5 +58,5 @@ io.on("connection", (socket) => {
 
 
 server.listen(port, () => {
-    console.log("Server is up on port 3000.")
+    console.log(`Server is up on port ${port}.`)
 })
