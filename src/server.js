@@ -31,13 +31,14 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("message", "A new user has joined");
 
     socket.on("sendMessage", (message, callback) => {
-        const filter = new Filter();
+        // const filter = new Filter();
 
-        if (filter.isProfane(message)) {
-            return callback("Profanity is not allowed!")
-        }
+        // if (filter.isProfane(message)) {
+        //     return callback("Profanity is not allowed!")
+        // }
 
         io.emit("message", message);
+        console.log("Server says", message)
         callback();
     })
 
